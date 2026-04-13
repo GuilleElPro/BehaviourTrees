@@ -34,7 +34,7 @@ public class NPCScript : MonoBehaviour
         Sequence goToMonaLisa = new Sequence("GoToMonalisa");
         goToMonaLisa.AddChild(isMonaLisaPresent);
         goToMonaLisa.AddChild(moveToMonaLisa);
-        tree.AddChild(goToMonaLisa);
+        //tree.AddChild(goToMonaLisa);
 
         Leaf isGemPresent = new Leaf("IsGemPresent", new Condition(() => gem.activeSelf));
         Leaf moveToGem = new Leaf("MoveToGem", new ActionStrategy(() => agent.SetDestination(gem.transform.position)));
@@ -42,12 +42,15 @@ public class NPCScript : MonoBehaviour
         Sequence goToGem = new Sequence("GoToGem");
         goToGem.AddChild(isGemPresent);
         goToGem.AddChild(moveToGem);
-        tree.AddChild(goToGem);
+        //tree.AddChild(goToGem);
 
         //Two sequences, one selector
         Selector goToSteal = new Selector("GoToSteal");
         goToSteal.AddChild(goToGem);
         goToSteal.AddChild(goToMonaLisa);
+
+        tree.AddChild(goToSteal);
+
 
     }
 
