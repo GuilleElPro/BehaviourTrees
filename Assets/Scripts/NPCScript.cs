@@ -8,8 +8,11 @@ public class NPCScript : MonoBehaviour
 
 {
     [SerializeField] List<Transform> waypoints = new();
+    [SerializeField] GameObject monaLisa;
+    [SerializeField] GameObject van;
     UnityEngine.AI.NavMeshAgent agent;
     BehaviourTree tree;
+
 
     void Awake()
     {
@@ -20,8 +23,17 @@ public class NPCScript : MonoBehaviour
     void Start()
     {
         tree = new BehaviourTree("NPC");
-        Leaf patrol = new Leaf("Patrol", new PatrolStrategy(transform, agent, waypoints));
-        tree.AddChild(patrol);
+        //Patrolling
+        //Leaf patrol = new Leaf("Patrol", new PatrolStrategy(transform, agent, waypoints));
+        //tree.AddChild(patrol);
+        Leaf isMonaLisaPresent = new Leaf("IsMonaLisaPresent", new Condition(() => monaLisa.activeSelf));
+        Leaf moveToMonaLisa = new Leaf("MoveToMonaLisa", new ActionStrategy(() => agent.SetDestination(monaLisa.transform.position)));
+
+        Sequence goToMonaLisa = new Sequence("GoToMonalisa");
+        goToMonaLisa.AddChild(isMonaLisaPresent);
+        goToMonaLisa.AddChild(moveToMonaLisa);
+        tree.AddChild(goToMonaLisa);
+
     }
 
     // Update is called once per frame
@@ -29,6 +41,13 @@ public class NPCScript : MonoBehaviour
     {
         Node.Status ns = tree.Process();
 
-        //Debug.Log($"The process returned {ns}");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.name.Equals("GetMonaLisa"))
+        {
+            monaLisa.SetActive(false);
+        }
     }
 }
