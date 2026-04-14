@@ -24,6 +24,10 @@ public class NPCScript : MonoBehaviour
     void Start()
     {
         tree = new BehaviourTree("NPC");
+        Leaf moveToMonaLisa = new Leaf("MoveToMonaLisa", new MoveToTarget(transform, agent, monaLisa.transform));
+        tree.AddChild(moveToMonaLisa);
+
+        /*
         //Patrolling
         //Leaf patrol = new Leaf("Patrol", new PatrolStrategy(transform, agent, waypoints));
         //tree.AddChild(patrol);
@@ -50,7 +54,7 @@ public class NPCScript : MonoBehaviour
         goToSteal.AddChild(goToMonaLisa);
 
         tree.AddChild(goToSteal);
-
+        */
 
     }
 

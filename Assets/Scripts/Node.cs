@@ -1,9 +1,80 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
 namespace PathFinding.BehaviourTrees
 {
+
+     // UntilSuccess
+    // Repeat
+    public class UntilFail : Node {
+        public UntilFail(string name) : base(name) { }
+        
+        public override Status Process() {
+            if (children[0].Process() == Status.Failure) {
+                Reset();
+                return Status.Failure;
+            }
+
+            return Status.Running;
+        }
+    }
+    
+    public class Inverter : Node {
+        public Inverter(string name) : base(name) { }
+        
+        public override Status Process() {
+            switch (children[0].Process()) {
+                case Status.Running:
+                    return Status.Running;
+                case Status.Failure:
+                    return Status.Success;
+                default:
+                    return Status.Failure;
+            }
+        }
+    }
+
+    /*
+    public class RandomSelector : PrioritySelector {
+        protected override List<Node> SortChildren() => children.Shuffle().ToList();
+        
+        public RandomSelector(string name, int priority = 0) : base(name, priority) { }
+    }
+    */
+    public class PrioritySelector : Selector {
+        List<Node> sortedChildren;
+        List<Node> SortedChildren => sortedChildren ??= SortChildren();
+        
+        protected virtual List<Node> SortChildren() => children.OrderByDescending(child => child.priority).ToList();
+        
+        public PrioritySelector(string name, int priority = 0) : base(name, priority) { }
+        
+        public override void Reset() {
+            base.Reset();
+            sortedChildren = null;
+        }
+        
+        public override Status Process() {
+            foreach (var child in SortedChildren) {
+                switch (child.Process()) {
+                    case Status.Running:
+                        return Status.Running;
+                    case Status.Success:
+                        Reset();
+                        return Status.Success;
+                    default:
+                        continue;
+                }
+            }
+
+            Reset();
+            return Status.Failure;
+        }
+    }
+    
+    
     public class Node
     {
         public enum Status { Success, Failure, Running }
@@ -37,6 +108,7 @@ namespace PathFinding.BehaviourTrees
     public class Selector : Node
     {
         public Selector(string name) : base(name) { }
+        public Selector(string name, int priority = 0) : base(name, priority) { }
 
         public override Status Process()
         {

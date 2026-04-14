@@ -1,7 +1,7 @@
 using Mono.Cecil;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEngine.AI;
 using UnityEngine;
 
 
@@ -49,7 +49,7 @@ namespace PathFinding.BehaviourTrees
     public class PatrolStrategy : IStrategy
     {
         readonly Transform entity;
-        readonly UnityEngine.AI.NavMeshAgent agent;
+        readonly NavMeshAgent agent;
         readonly List<Transform> patrolPoints;
         readonly float patrolSpeed;
         bool isMovingToPoint;
@@ -57,7 +57,7 @@ namespace PathFinding.BehaviourTrees
         
 
 
-        public PatrolStrategy(Transform entity, UnityEngine.AI.NavMeshAgent agent, List<Transform> patrolPoints, float patrolSpeed = 2f)
+        public PatrolStrategy(Transform entity, NavMeshAgent agent, List<Transform> patrolPoints, float patrolSpeed = 2f)
         {
             this.entity = entity;
             this.agent = agent;
@@ -105,5 +105,35 @@ namespace PathFinding.BehaviourTrees
 
         public void Reset() => currentIndex = 0;
     }
+
+    public class MoveToTarget : IStrategy {
+        readonly Transform entity;
+        readonly NavMeshAgent agent;
+        readonly Transform target;
+        bool isPathCalculated;
+
+        public MoveToTarget(Transform entity, NavMeshAgent agent, Transform target) {
+            this.entity = entity;
+            this.agent = agent;
+            this.target = target;
+        }
+
+        public Node.Status Process() {
+            if (Vector3.Distance(entity.position, target.position) < 1f) {
+                return Node.Status.Success;
+            }
+            
+            agent.SetDestination(target.position);
+            entity.LookAt(target.position);
+
+            if (agent.pathPending) {
+                isPathCalculated = true;
+            }
+            Debug.Log("Running...");
+            return Node.Status.Running;
+        }
+
+        public void Reset() => isPathCalculated = false;
+    }    
 
 }
