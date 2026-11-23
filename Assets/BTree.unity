@@ -2465,12 +2465,25 @@ MonoBehaviour:
   - rid: 6690391254634332195
   - rid: 6690391254634332196
   - rid: 6690391254634332197
+  - rid: 4986636490011837007
   m_OriginalGraph: {fileID: 2688340001364889462, guid: 69d1a184630fb1340a8703d6917ed6b6, type: 2}
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
     version: 2
     RefIds:
+    - rid: 4986636490011837007
+      type: {class: 'BlackboardVariable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject, UnityEngine.CoreModule]], mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 10791924591885309139
+          m_Value1: 11155250876722047711
+        Name: Waypoints
+        m_Value:
+        - {fileID: 631702878}
+        - {fileID: 2073423183}
+        - {fileID: 91046624}
+        - {fileID: 1748048753}
     - rid: 6690391253697691870
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
